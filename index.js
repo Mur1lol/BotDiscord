@@ -71,7 +71,7 @@ bot.on('message', msg => {
         var nomes, jogadores;
         
         for (const [id, voiceChannel] of voiceChannels) { 
-            voiceChannel.members.forEach(member => nome += (member.user.username)+"#");
+            voiceChannel.members.forEach(member => nome += (member.displayName)+"#");
         }
         nomes = nome.split("#");
         jogadores = nomes.filter(empty);
