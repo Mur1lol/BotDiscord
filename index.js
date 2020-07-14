@@ -94,7 +94,7 @@ function sorteio(jogador) {
     time1 = [...jogador]; // Copia os dados do Array [jogador] e coloca nesse outro Array [time1]
     time2 = new Array();
 
-    if (jogador.length >= 4 && jogador.length % 2 == 0) {
+    if (jogador.length >= 3) {
         for (let i = 0; i < jogador.length / 2; i++) {
             let posicao = Math.floor(Math.random() * time1.length);
             time2[i] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time2]
