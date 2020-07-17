@@ -37,10 +37,7 @@ bot.on('message', msg => {
         var participantes = new Array();
         let x = 0;
 
-        embed = {
-            "description": "Digite os nomes dos jogadores, os separando em virgulas (',').",
-            "color": 1752220
-        };
+        mensagem_aguardo(0)
         msg.channel.send({ embed }).then(() => {
             const filter = m => msg.author.id === m.author.id;
 
@@ -57,7 +54,7 @@ bot.on('message', msg => {
                         msg.channel.send({ embed });
                     }
                     else {
-                        mensagem_erro(participantes);
+                        mensagem_erro(0, participantes);
                         msg.channel.send({ embed });
                     }
                 })
@@ -84,7 +81,7 @@ bot.on('message', msg => {
             msg.channel.send({ embed });
         }
         else {
-            mensagem_erro(jogadores);
+            mensagem_erro(0, jogadores);
             msg.channel.send({ embed });
         }
     }
@@ -99,10 +96,7 @@ bot.on('message', msg => {
         var nomes = new Array();
         var jogadores, nome = "";
         
-        embed = {
-            "description": "Digite a posição em que os jogadores estão dentro do canal, os separando em virgulas (',').",
-            "color": 1752220
-        };
+        mensagem_aguardo(1);
         msg.channel.send({ embed }).then(() => {
             const filter = m => msg.author.id === m.author.id;
 
@@ -139,7 +133,7 @@ bot.on('message', msg => {
                             msg.channel.send({ embed });
                         }
                         else {
-                            mensagem_erro(0, nomes)
+                            mensagem_erro(0, nomes);
                             msg.channel.send({ embed });
                         }
                     }
@@ -162,8 +156,7 @@ function sorteio(jogador, qtde) {
     time3 = new Array();
     time4 = new Array();
 
-    let j = 0
-    let k = 0;
+    let j = 0, k = 0;
 
     if (qtde == "" || qtde == 2) {
         if (jogador.length >= 3) {
@@ -172,22 +165,13 @@ function sorteio(jogador, qtde) {
                 time2[i] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time2]
                 time1.splice(posicao, 1); // E os dados que foram copiados do [time1] são deletados
             }
-
-            embed = {
-                "color": 2943861,
-                "fields": [
-                    { "name": "Time 1", "value": time1 },
-                    { "name": "Time 2", "value": time2 }
-                ]
-            };
-
+            mensagem_equipes(time1, time2, time3, time4);
             return true;
         }
     }
     else if (qtde == 3) {
         if (jogador.length >= 4) {
             for (let i = 0; i < jogador.length / 3 * 2; i++) {
-                
                 let posicao = Math.floor(Math.random() * time1.length);
                 if (time3.length >= (jogador.length/3)) {
                     time2[j] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time2]
@@ -198,16 +182,7 @@ function sorteio(jogador, qtde) {
                 }
                 time1.splice(posicao, 1); // E os dados que foram copiados do [time1] são deletados
             }
-
-            embed = {
-                "color": 2943861,
-                "fields": [
-                    { "name": "Time 1", "value": time1 },
-                    { "name": "Time 2", "value": time2 },
-                    { "name": "Time 3", "value": time3}
-                ]
-            };
-
+            mensagem_equipes(time1, time2, time3, time4);
             return true;
         }
     }
@@ -228,29 +203,61 @@ function sorteio(jogador, qtde) {
                 }
                 time1.splice(posicao, 1); // E os dados que foram copiados do [time1] são deletados
             }
-
-            embed = {
-                "color": 2943861,
-                "fields": [
-                    { "name": "Time 1", "value": time1 },
-                    { "name": "Time 2", "value": time2 },
-                    { "name": "Time 3", "value": time3 },
-                    { "name": "Time 4", "value": time4 }
-                ]
-            };
-
+            mensagem_equipes(time1,time2,time3,time4);
             return true;
         }
     }
-    else if (qtde < 2 || qtde > 4) {
+    else {
+        mensagem_erro(3);
+        return true;
+    }
+}
+
+function mensagem_equipes(time1, time2, time3, time4) {
+    if (time3.length == 0 && time4.length == 0) {
         embed = {
-            "color": 15158332,
+            "color": 2943861,
             "fields": [
-                { "name": "Foi mal", "value": "Não vai dar" }
+                { "name": "Time 1", "value": time1 },
+                { "name": "Time 2", "value": time2 }
             ]
         };
+    }
+    else if (time4.length == 0) {
+        embed = {
+            "color": 2943861,
+            "fields": [
+                { "name": "Time 1", "value": time1 },
+                { "name": "Time 2", "value": time2 },
+                { "name": "Time 3", "value": time3}
+            ]
+        };
+    }
+    else {
+        embed = {
+            "color": 2943861,
+            "fields": [
+                { "name": "Time 1", "value": time1 },
+                { "name": "Time 2", "value": time2 },
+                { "name": "Time 3", "value": time3 },
+                { "name": "Time 4", "value": time4 }
+            ]
+        };
+    }
+}
 
-        return true;
+function mensagem_aguardo(numero) {
+    if (numero == 0) {
+        embed = {
+            "description": "Digite os nomes dos jogadores, os separando em virgulas (',').",
+            "color": 1752220
+        };
+    }
+    else if (numero == 1) {
+        embed = {
+            "description": "Digite a posição em que os jogadores estão dentro do canal, os separando em virgulas (',').",
+            "color": 1752220
+        };
     }
 }
 
@@ -276,6 +283,14 @@ function mensagem_erro(numero, jogador) {
             "color": 15158332,
             "fields": [
                 { "name": "Erro", "value": "Acho que tem gente demais pra esse sorteio :thinking:" }
+            ]
+        };
+    }
+    else if (numero == 3) {
+        embed = {
+            "color": 15158332,
+            "fields": [
+                { "name": "Foi mal", "value": "Não vai dar" }
             ]
         };
     }
