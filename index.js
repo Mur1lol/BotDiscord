@@ -34,7 +34,7 @@ bot.on('message', msg => {
     //SORTEAR JOGADORES POR MENSAGEM
     else if (mensagem.startsWith("!nomes")) {
         var numero_times = msg.content.replace("!nomes", ""); // Remove o "!nomes" e deixa apenas o numero de times
-        var participantes = new Array();
+        var nomes = new Array();
         let x = 0;
 
         mensagem_aguardo(0)
@@ -46,15 +46,15 @@ bot.on('message', msg => {
                     resultado = messages.first().content.split(","); //Pegar o nome dos jogadores
         
                     for (let j = 0; j < resultado.length; j++) {
-                        participantes[x] = resultado[j].replace(" ", ""); //Colocando os nomes dentro do Array e removendo os espaços
+                        nomes[x] = resultado[j].replace(" ", ""); //Colocando os nomes dentro do Array e removendo os espaços
                         x++;                
                     }
 
-                    if (sorteio(participantes, numero_times)) {     
+                    if (sorteio(nomes, numero_times)) {     
                         msg.channel.send({ embed });
                     }
                     else {
-                        mensagem_erro(0, participantes);
+                        mensagem_erro(0, nomes);
                         msg.channel.send({ embed });
                     }
                 })
@@ -70,18 +70,18 @@ bot.on('message', msg => {
         var numero_times = msg.content.replace("!sortear", ""); // Remove o "!sortear" e deixa apenas o numero de times
         var idvoice = msg.member.voice.channelID; // Identifica o canal de voz em que o usuario esta
         const voiceChannels = msg.guild.channels.cache.filter(c => c.id === idvoice && c.type === 'voice'); 
-        var jogadores, nome = "";
+        var participantes, nome = "";
         
         for (const [id, voiceChannel] of voiceChannels) { 
             voiceChannel.members.forEach(member => nome += (member.displayName)+"#");
         }
-        jogadores = nome.split("#").filter(empty);
+        participantes = nome.split("#").filter(empty);
 
-        if (sorteio(jogadores, numero_times)) {
+        if (sorteio(participantes, numero_times)) {
             msg.channel.send({ embed });
         }
         else {
-            mensagem_erro(0, jogadores);
+            mensagem_erro(0, participantes);
             msg.channel.send({ embed });
         }
     }
@@ -92,9 +92,8 @@ bot.on('message', msg => {
         var idvoice = msg.member.voice.channelID;
         const voiceChannels = msg.guild.channels.cache.filter(c => c.id === idvoice && c.type === 'voice');
         
-        var participantes = new Array();
-        var nomes = new Array();
-        var jogadores, nome = "";
+        var jogadores = new Array();
+        var participantes, nome = "";
         
         mensagem_aguardo(1);
         msg.channel.send({ embed }).then(() => {
@@ -107,13 +106,13 @@ bot.on('message', msg => {
                     for (const [id, voiceChannel] of voiceChannels) {
                         voiceChannel.members.forEach(member => nome += (member.displayName) + "#");
                     }
-                    jogadores = nome.split("#").filter(empty);
+                    participantes = nome.split("#").filter(empty);
 
                     for (let i = 0; i < resultado.length; i++) {
                         posicao = parseInt(resultado[i])-1;
-                        if (resultado.length <= jogadores.length) {
-                            if (posicao >= 0 && posicao < jogadores.length) {
-                                nomes[i] = jogadores[posicao];
+                        if (resultado.length <= participantes.length) {
+                            if (posicao >= 0 && posicao < participantes.length) {
+                                jogadores[i] = participantes[posicao];
                             }
                             else {
                                 mensagem_erro(1);
@@ -128,12 +127,12 @@ bot.on('message', msg => {
                         }
                     }
 
-                    if (nomes.length != 0) {
-                        if (sorteio(nomes, numero_times)) {
+                    if (jogadores.length != 0) {
+                        if (sorteio(jogadores, numero_times)) {
                             msg.channel.send({ embed });
                         }
                         else {
-                            mensagem_erro(0, nomes);
+                            mensagem_erro(0, jogadores);
                             msg.channel.send({ embed });
                         }
                     }
@@ -158,39 +157,32 @@ function sorteio(jogador, qtde) {
 
     let j = 0, k = 0;
 
-    if (qtde == "" || qtde == 2) {
-        if (jogador.length >= 3) {
-            for (let i = 0; i < jogador.length / 2; i++) {
-                let posicao = Math.floor(Math.random() * time1.length);
-                time2[i] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time2]
-                time1.splice(posicao, 1); // E os dados que foram copiados do [time1] são deletados
-            }
-            mensagem_equipes(time1, time2, time3, time4);
-            return true;
-        }
+    if (qtde == "") { qtde = 2 }
+    else { qtde = parseInt(qtde)}
+
+    if (qtde < 2 || qtde > 4) {
+        mensagem_erro(3);
+        return true;
     }
-    else if (qtde == 3) {
-        if (jogador.length >= 4) {
-            for (let i = 0; i < jogador.length / 3 * 2; i++) {
-                let posicao = Math.floor(Math.random() * time1.length);
-                if (time3.length >= (jogador.length/3)) {
+
+    if (jogador.length >= (qtde+1)) {
+        for (let i = 0; i < ((jogador.length / qtde) * (qtde-1)); i++) {
+            let posicao = Math.floor(Math.random() * time1.length);
+
+            if (qtde == 2) {
+                time2[i] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time2]
+            }
+            else if (qtde == 3) {
+                if (time3.length >= (jogador.length / 3)) {
                     time2[j] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time2]
                     j++;
                 }
                 else {
                     time3[i] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time3]               
                 }
-                time1.splice(posicao, 1); // E os dados que foram copiados do [time1] são deletados
             }
-            mensagem_equipes(time1, time2, time3, time4);
-            return true;
-        }
-    }
-    else if (qtde == 4) {
-        if (jogador.length >= 5) {
-            for (let i = 0; i < jogador.length / 4 * 3; i++) {
-                let posicao = Math.floor(Math.random() * time1.length);
-                if (time3.length >0 && time3.length > time2.length) {
+            else if (qtde == 4) {
+                if (time3.length > 0 && time3.length > time2.length) {
                     time2[k] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time2]
                     k++;
                 }
@@ -201,14 +193,11 @@ function sorteio(jogador, qtde) {
                 else {
                     time4[i] = time1[posicao]; //Passa alguns dados do Array [time1] para o [time4]               
                 }
-                time1.splice(posicao, 1); // E os dados que foram copiados do [time1] são deletados
             }
-            mensagem_equipes(time1,time2,time3,time4);
-            return true;
+            
+            time1.splice(posicao, 1); // E os dados que foram copiados do [time1] são deletados
         }
-    }
-    else {
-        mensagem_erro(3);
+        mensagem_equipes(time1, time2, time3, time4);
         return true;
     }
 }
@@ -249,7 +238,7 @@ function mensagem_equipes(time1, time2, time3, time4) {
 function mensagem_aguardo(numero) {
     if (numero == 0) {
         embed = {
-            "description": "Digite os nomes dos jogadores, os separando em virgulas (',').",
+            "description": "Digite os jogadores dos jogadores, os separando em virgulas (',').",
             "color": 1752220
         };
     }
