@@ -60,7 +60,6 @@ bot.on('message', msg => {
                         mensagem_erro(participantes);
                         msg.channel.send({ embed });
                     }
-                    
                 })
                 .catch(() => {
                     mensagem_inativo();
@@ -119,27 +118,17 @@ bot.on('message', msg => {
                     for (let i = 0; i < resultado.length; i++) {
                         posicao = parseInt(resultado[i])-1;
                         if (resultado.length <= jogadores.length) {
-                            if (posicao >= 0 && posicao <= jogadores.length) {
+                            if (posicao >= 0 && posicao < jogadores.length) {
                                 nomes[i] = jogadores[posicao];
                             }
                             else {
-                                embed = {
-                                    "color": 15158332,
-                                    "fields": [
-                                        { "name": "Erro", "value": "Posição inválida" }
-                                    ]
-                                };
+                                mensagem_erro(1);
                                 msg.channel.send({ embed });
                                 break;
                             }
                         }
                         else {
-                            embed = {
-                                "color": 15158332,
-                                "fields": [
-                                    { "name": "Erro", "value": "Acho que tem gente demais pra esse sorteio :thinking:" }
-                                ]
-                            };
+                            mensagem_erro(2);
                             msg.channel.send({ embed });
                             break;
                         }
@@ -150,7 +139,7 @@ bot.on('message', msg => {
                             msg.channel.send({ embed });
                         }
                         else {
-                            mensagem_erro(nomes)
+                            mensagem_erro(0, nomes)
                             msg.channel.send({ embed });
                         }
                     }
@@ -265,13 +254,31 @@ function sorteio(jogador, qtde) {
     }
 }
 
-function mensagem_erro(jogador) {
-    embed = {
-        "color": 15158332,
-        "fields": [
-            { "name": "Erro", "value": "O numero de jogadores não é sificiente. (Número de Jogadores atuais: " + jogador.length + ")" }
-        ]
-    };
+function mensagem_erro(numero, jogador) {
+    if (numero == 0) {
+        embed = {
+            "color": 15158332,
+            "fields": [
+                { "name": "Erro", "value": "O numero de jogadores não é suficiente. (Número de Jogadores atuais: " + jogador.length + ")" }
+            ]
+        };
+    }
+    else if (numero == 1) {
+        embed = {
+            "color": 15158332,
+            "fields": [
+                { "name": "Erro", "value": "Posição inválida" }
+            ]
+        };
+    }
+    else if (numero == 2) {
+        embed = {
+            "color": 15158332,
+            "fields": [
+                { "name": "Erro", "value": "Acho que tem gente demais pra esse sorteio :thinking:" }
+            ]
+        };
+    }
 }
 
 function mensagem_inativo() {
