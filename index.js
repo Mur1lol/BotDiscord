@@ -206,6 +206,9 @@ function mensagem_equipes(time1, time2, time3, time4) {
     if (time3.length == 0 && time4.length == 0) {
         embed = {
             "color": 2943861,
+            "author": {
+                "name": bot.user.username
+            },
             "fields": [
                 { "name": "Time 1", "value": time1 },
                 { "name": "Time 2", "value": time2 }
@@ -215,6 +218,9 @@ function mensagem_equipes(time1, time2, time3, time4) {
     else if (time4.length == 0) {
         embed = {
             "color": 2943861,
+            "author": {
+                "name": bot.user.username
+            },
             "fields": [
                 { "name": "Time 1", "value": time1 },
                 { "name": "Time 2", "value": time2 },
@@ -225,6 +231,9 @@ function mensagem_equipes(time1, time2, time3, time4) {
     else {
         embed = {
             "color": 2943861,
+            "author": {
+                "name": bot.user.username
+            },
             "fields": [
                 { "name": "Time 1", "value": time1 },
                 { "name": "Time 2", "value": time2 },
@@ -239,12 +248,18 @@ function mensagem_aguardo(numero) {
     if (numero == 0) {
         embed = {
             "description": "Digite os jogadores dos jogadores, os separando em virgulas (',').",
+            "author": {
+                "name": bot.user.username
+            },
             "color": 1752220
         };
     }
     else if (numero == 1) {
         embed = {
             "description": "Digite a posição em que os jogadores estão dentro do canal, os separando em virgulas (',').",
+            "author": {
+                "name": bot.user.username
+            },
             "color": 1752220
         };
     }
@@ -254,6 +269,9 @@ function mensagem_erro(numero, jogador) {
     if (numero == 0) {
         embed = {
             "color": 15158332,
+            "author": {
+                "name": bot.user.username
+            },
             "fields": [
                 { "name": "Erro", "value": "O numero de jogadores não é suficiente. (Número de Jogadores atuais: " + jogador.length + ")" }
             ]
@@ -262,6 +280,9 @@ function mensagem_erro(numero, jogador) {
     else if (numero == 1) {
         embed = {
             "color": 15158332,
+            "author": {
+                "name": bot.user.username
+            },
             "fields": [
                 { "name": "Erro", "value": "Posição inválida" }
             ]
@@ -270,6 +291,9 @@ function mensagem_erro(numero, jogador) {
     else if (numero == 2) {
         embed = {
             "color": 15158332,
+            "author": {
+                "name": bot.user.username
+            },
             "fields": [
                 { "name": "Erro", "value": "Acho que tem gente demais pra esse sorteio :thinking:" }
             ]
@@ -278,6 +302,9 @@ function mensagem_erro(numero, jogador) {
     else if (numero == 3) {
         embed = {
             "color": 15158332,
+            "author": {
+                "name": bot.user.username
+            },
             "fields": [
                 { "name": "Foi mal", "value": "Não vai dar" }
             ]
@@ -288,6 +315,10 @@ function mensagem_erro(numero, jogador) {
 function mensagem_inativo() {
     embed = {
         "description": "Ninguem vai jogar? :thinking:",
+        "author": {
+            "name": bot.user.username,
+            "icon_url": "https://cdn.discordapp.com/attachments/718710623344787528/719315215321137152/pizza.png"
+        },
         "color": 15158332
     };
 }
