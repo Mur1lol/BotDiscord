@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
+const config = require("./config.json");
 const bot = new Discord.Client();
-const token = '';
 
 bot.on('ready', () => {
     console.log('Estou online :D');
@@ -37,32 +37,42 @@ bot.on('message', msg => {
         var nomes = new Array();
         let x = 0;
 
-        mensagem_aguardo(0)
-        msg.channel.send({ embed }).then(() => {
-            const filter = m => msg.author.id === m.author.id;
+        if (numero_times == "") {
+            numero_times = 2;
+        }
 
-            msg.channel.awaitMessages(filter, { time: 150000, max: 1, errors: ['time'] })
-                .then(messages => {                    
-                    resultado = messages.first().content.split(","); //Pegar o nome dos jogadores
-        
-                    for (let j = 0; j < resultado.length; j++) {
-                        nomes[x] = resultado[j].replace(" ", ""); //Colocando os nomes dentro do Array e removendo os espaços
-                        x++;                
-                    }
+        if (numero_times > 1 && numero_times < 5) {
+            mensagem_aguardo(0)
+            msg.channel.send({ embed }).then(() => {
+                const filter = m => msg.author.id === m.author.id;
 
-                    if (sorteio(nomes, numero_times)) {     
+                msg.channel.awaitMessages(filter, { time: 150000, max: 1, errors: ['time'] })
+                    .then(messages => {                    
+                        resultado = messages.first().content.split(","); //Pegar o nome dos jogadores
+            
+                        for (let j = 0; j < resultado.length; j++) {
+                            nomes[x] = resultado[j].trim(); //Colocando os nomes dentro do Array e removendo os espaços
+                            x++;                
+                        }
+
+                        if (sorteio(nomes, numero_times)) {     
+                            msg.channel.send({ embed });
+                        }
+                        else {
+                            mensagem_erro(0, nomes);
+                            msg.channel.send({ embed });
+                        }
+                    })
+                    .catch(() => {
+                        mensagem_inativo();
                         msg.channel.send({ embed });
-                    }
-                    else {
-                        mensagem_erro(0, nomes);
-                        msg.channel.send({ embed });
-                    }
-                })
-                .catch(() => {
-                    mensagem_inativo();
-                    msg.channel.send({ embed });
-                });
-        });
+                    });
+            });
+        }
+        else {
+            mensagem_erro(3);
+            msg.channel.send({ embed });
+        }
     }
 
     //SORTEAR JOGADORES DENTRO DO CANAL DE VOZ
@@ -71,17 +81,27 @@ bot.on('message', msg => {
         var idvoice = msg.member.voice.channelID; // Identifica o canal de voz em que o usuario esta
         const voiceChannels = msg.guild.channels.cache.filter(c => c.id === idvoice && c.type === 'voice'); 
         var participantes, nome = "";
-        
-        for (const [id, voiceChannel] of voiceChannels) { 
-            voiceChannel.members.forEach(member => nome += (member.displayName)+"#");
-        }
-        participantes = nome.split("#").filter(empty);
 
-        if (sorteio(participantes, numero_times)) {
-            msg.channel.send({ embed });
+        if (numero_times == "") {
+            numero_times = 2;
+        }
+        
+        if (numero_times > 1 && numero_times < 5) {
+            for (const [id, voiceChannel] of voiceChannels) { 
+                voiceChannel.members.forEach(member => nome += (member.displayName)+"#");
+            }
+            participantes = nome.split("#").filter(empty);
+        
+            if (sorteio(participantes, numero_times)) {
+                msg.channel.send({ embed });
+            }
+            else {
+                mensagem_erro(0, participantes);
+                msg.channel.send({ embed });
+            }
         }
         else {
-            mensagem_erro(0, participantes);
+            mensagem_erro(3);
             msg.channel.send({ embed });
         }
     }
@@ -94,54 +114,69 @@ bot.on('message', msg => {
         
         var jogadores = new Array();
         var participantes, nome = "";
+
+        if (numero_times == "") {
+            numero_times = 2;
+        }
         
-        mensagem_aguardo(1);
-        msg.channel.send({ embed }).then(() => {
-            const filter = m => msg.author.id === m.author.id;
+        if (numero_times > 1 && numero_times < 5) {
+            mensagem_aguardo(1);
+            msg.channel.send({ embed }).then(() => {
+                const filter = m => msg.author.id === m.author.id;
 
-            msg.channel.awaitMessages(filter, { time: 150000, max: 1, errors: ['time'] })
-                .then(messages => {
-                    resultado = messages.first().content.split(","); //Pegar o nome dos jogadores
-      
-                    for (const [id, voiceChannel] of voiceChannels) {
-                        voiceChannel.members.forEach(member => nome += (member.displayName) + "#");
-                    }
-                    participantes = nome.split("#").filter(empty);
+                msg.channel.awaitMessages(filter, { time: 150000, max: 1, errors: ['time'] })
+                    .then(messages => {
+                        resultado = messages.first().content.split(","); //Pegar o nome dos jogadores
+        
+                        for (const [id, voiceChannel] of voiceChannels) {
+                            voiceChannel.members.forEach(member => nome += (member.displayName) + "#");
+                        }
+                        participantes = nome.split("#").filter(empty);
 
-                    for (let i = 0; i < resultado.length; i++) {
-                        posicao = parseInt(resultado[i])-1;
-                        if (resultado.length <= participantes.length) {
-                            if (posicao >= 0 && posicao < participantes.length) {
-                                jogadores[i] = participantes[posicao];
+                        for (let i = 0; i < resultado.length; i++) {
+                            posicao = parseInt(resultado[i])-1;
+                            if (resultado.length <= participantes.length) {
+                                if (posicao >= 0 && posicao < participantes.length) {
+                                    jogadores[i] = participantes[posicao];
+                                }
+                                else {
+                                    mensagem_erro(1);
+                                    msg.channel.send({ embed });
+                                    break;
+                                }
                             }
                             else {
-                                mensagem_erro(1);
+                                mensagem_erro(2);
                                 msg.channel.send({ embed });
                                 break;
                             }
                         }
-                        else {
-                            mensagem_erro(2);
-                            msg.channel.send({ embed });
-                            break;
-                        }
-                    }
 
-                    if (jogadores.length != 0) {
-                        if (sorteio(jogadores, numero_times)) {
-                            msg.channel.send({ embed });
+                        if (jogadores.length != 0) {
+                            if (sorteio(jogadores, numero_times)) {
+                                msg.channel.send({ embed });
+                            }
+                            else {
+                                mensagem_erro(0, jogadores);
+                                msg.channel.send({ embed });
+                            }
                         }
-                        else {
-                            mensagem_erro(0, jogadores);
-                            msg.channel.send({ embed });
-                        }
-                    }
-                })
-                .catch(() => {
-                    mensagem_inativo();
-                    msg.channel.send({ embed });
-                });
-        });
+                    })
+                    .catch(() => {
+                        mensagem_inativo();
+                        msg.channel.send({ embed });
+                    });
+            });
+        }
+        else {
+            mensagem_erro(3);
+            msg.channel.send({ embed });
+        }
+    }
+
+    //AREA DE TESTES
+    else if (mensagem.startsWith("!teste") && msg.author.id == config.mur1lol) {
+        console.log("TESTE")
     }
 });
 
@@ -157,13 +192,7 @@ function sorteio(jogador, qtde) {
 
     let j = 0, k = 0;
 
-    if (qtde == "") { qtde = 2 }
-    else { qtde = parseInt(qtde)}
-
-    if (qtde < 2 || qtde > 4) {
-        mensagem_erro(3);
-        return true;
-    }
+    qtde = parseInt(qtde)
 
     if (jogador.length >= (qtde+1)) {
         for (let i = 0; i < ((jogador.length / qtde) * (qtde-1)); i++) {
@@ -316,11 +345,10 @@ function mensagem_inativo() {
     embed = {
         "description": "Ninguem vai jogar? :thinking:",
         "author": {
-            "name": bot.user.username,
-            "icon_url": "https://cdn.discordapp.com/attachments/718710623344787528/719315215321137152/pizza.png"
+            "name": bot.user.username
         },
         "color": 15158332
     };
 }
 
-bot.login(token);
+bot.login(config.token);
