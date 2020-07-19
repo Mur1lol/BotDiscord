@@ -18,6 +18,8 @@ Para começar, basta utilizar os comandos !sortear junto com a quantidade de equ
 
 # Prints
 
-> ![Sorteio1](https://cdn.discordapp.com/attachments/733906675966279690/733906837492989972/bot2.PNG)
+> ![Sortear](https://cdn.discordapp.com/attachments/734516091107147887/734519844577476609/bot_sortear.PNG)
 
-> ![Sorteio2](https://cdn.discordapp.com/attachments/733906675966279690/733906835043647548/bot_4.PNG)
+> ![Jogar](https://cdn.discordapp.com/attachments/734516091107147887/734522191520989354/bot_jogar.PNG)
+
+> ![Nomes](https://cdn.discordapp.com/attachments/734516091107147887/734520202695278652/bot_nomes.PNG)
