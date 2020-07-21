@@ -13,7 +13,7 @@ module.exports = {
             voiceChannel.members.forEach(member => participantes.push(member.displayName));
         }
 
-        if (participantes.length > numero_times(qtde)) {
+        if (participantes.length > numero_times(qtde) && numero_times(qtde) > 1) {
             let equipe = sorteio.equipe(participantes, numero_times(qtde));
             embed = new Discord.MessageEmbed()
                 .setColor(2943861)
