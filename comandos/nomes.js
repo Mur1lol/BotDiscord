@@ -11,7 +11,7 @@ module.exports = {
         mensagem_aguardo = new Discord.MessageEmbed()
             .setDescription('Digite os jogadores dos jogadores, os separando em virgulas (\',\').')
             .setColor(1752220)
-            .setAuthor(bot);
+            .setAuthor(bot.user.username);
 
         msg.channel.send(mensagem_aguardo).then(() => {
             const filter = m => msg.author.id === m.author.id;

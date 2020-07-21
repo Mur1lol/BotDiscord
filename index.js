@@ -27,9 +27,9 @@ bot.on('message', msg => {
     if (!bot.comandos.has(nome_comando)) return;
 
     const comando = bot.comandos.get(nome_comando);
-
+    
     try {
-        comando.execute(msg, numero_times, bot.user.username);
+        comando.execute(msg, numero_times, bot);
     } catch (error) {
         console.error(error);
         msg.reply('Erro: '+error);

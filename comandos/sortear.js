@@ -17,14 +17,14 @@ module.exports = {
             let equipe = sorteio.equipe(participantes, numero_times(qtde));
             embed = new Discord.MessageEmbed()
                 .setColor(2943861)
-                .setAuthor(bot)
+                .setAuthor(bot.user.username)
                 .setTitle('=== Equipes Formadas ===')
                 .addFields(equipe);
         }
         else {
             embed = new Discord.MessageEmbed()
                 .setColor(15158332)
-                .setAuthor(bot)
+                .setAuthor(bot.user.username)
                 .addFields(
                     { name: 'Erro', value: 'O numero de jogadores não é suficiente. (Número de Jogadores atuais: ' + participantes.length + ')' }
                 );
