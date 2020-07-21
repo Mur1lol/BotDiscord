@@ -58,7 +58,7 @@ module.exports = {
                         }
                     }
 
-                    if (jogadores.length > numero_times(qtde)) {
+                    if (jogadores.length > numero_times(qtde) && numero_times(qtde) > 1) {
                         let equipe = sorteio.equipe(jogadores, numero_times(qtde));
                         embed = new Discord.MessageEmbed()
                             .setColor(2943861)
