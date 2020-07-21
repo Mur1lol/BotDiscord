@@ -36,7 +36,7 @@ module.exports = {
                             else {
                                 embed = new Discord.MessageEmbed()
                                     .setColor(15158332)
-                                    .setAuthor(bot)
+                                    .setAuthor(bot.user.username)
                                     .addFields(
                                         { name: 'Erro', value: 'Posição inválida' }
                                     );
@@ -48,7 +48,7 @@ module.exports = {
                         else {
                             embed = new Discord.MessageEmbed()
                                 .setColor(15158332)
-                                .setAuthor(bot)
+                                .setAuthor(bot.user.username)
                                 .addFields(
                                     { name: 'Erro', value: 'Acho que tem gente demais pra esse sorteio :thinking:' }
                                 );
@@ -82,7 +82,7 @@ module.exports = {
                     embed = new Discord.MessageEmbed()
                         .setDescription('Ninguem vai jogar? :thinking:')
                         .setColor(15158332)
-                        .setAuthor(bot);
+                        .setAuthor(bot.user.username);
 
                     msg.channel.send(embed);
                 });
