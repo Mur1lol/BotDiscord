@@ -21,18 +21,18 @@ bot.on('ready', () => {
 bot.on('message', msg => {
     if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 
-    const numero_times = msg.content.slice(config.prefix.length).split(/ +/);
-    const nome_comando = numero_times.shift().toLowerCase();
+    const extra = msg.content.toLowerCase().slice(config.prefix.length).split(/ +/);
+    const nome_comando = extra.shift();
 
     if (!bot.comandos.has(nome_comando)) return;
 
     const comando = bot.comandos.get(nome_comando);
     
     try {
-        comando.execute(msg, numero_times, bot);
+        comando.execute(msg, extra, bot);
     } catch (error) {
         console.error(error);
-        msg.reply('Erro: '+error);
+        msg.reply('Ops, estou em manutenção. Em alguns minutos já estarei pronto para uso :grin:');
     }
 });
 

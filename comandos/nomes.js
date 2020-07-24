@@ -4,63 +4,65 @@ const sorteio = require('../funcoes/funSorteio.js');
 module.exports = {
     name: 'nomes',
     description: 'Adiciona uma lista de jogadores e sorteia os times',
-    execute(msg, qtde, bot) {
+    example: '!nomes tam <numero de equipes> <lista de nomes>',
+    execute(msg, extra, bot) {
         var participantes = new Array();
+        var participantes = [];
         let x = 0;
 
-        mensagem_aguardo = new Discord.MessageEmbed()
-            .setDescription('Digite os jogadores dos jogadores, os separando em virgulas (\',\').')
-            .setColor(1752220)
-            .setAuthor(bot.user.username);
+        if (lista(extra)) {
+            resultado = lista(extra);
+            for (let j = 0; j < resultado.length; j++) {
+                participantes[x] = resultado[j].trim(); //Colocando os nomes dentro do Array e removendo os espaços
+                x++;
+            }
 
-        msg.channel.send(mensagem_aguardo).then(() => {
-            const filter = m => msg.author.id === m.author.id;
+            if (participantes.length >= numero_times(extra) && numero_times(extra) > 0) {
+                let equipe = sorteio.equipe(participantes, numero_times(extra));
+                embed = new Discord.MessageEmbed()
+                    .setColor(2943861)
+                    .setAuthor(bot.user.username)
+                    .setTitle('=== Equipes Formadas ===')
+                    .addFields(equipe);
+            }
+            else {
+                embed = new Discord.MessageEmbed()
+                    .setColor(15158332)
+                    .setAuthor(bot.user.username)
+                    .addFields(
+                        { name: 'Erro', value: 'O numero de jogadores não é suficiente. (Número de Jogadores atuais: ' + participantes.length + ')' }
+                    );
+            }
 
-            msg.channel.awaitMessages(filter, { time: 150000, max: 1, errors: ['time'] })
-                .then(messages => {
-                    resultado = messages.first().content.split(","); //Pegar o nome dos jogadores
-
-                    for (let j = 0; j < resultado.length; j++) {
-                        participantes[x] = resultado[j].trim(); //Colocando os nomes dentro do Array e removendo os espaços
-                        x++;
-                    }
-
-                    if (participantes.length > numero_times(qtde) && numero_times(qtde) > 1) {
-                        let equipe = sorteio.equipe(participantes, numero_times(qtde));
-                        embed = new Discord.MessageEmbed()
-                            .setColor(2943861)
-                            .setAuthor(bot.user.username)
-                            .setTitle('=== Equipes Formadas ===')
-                            .addFields(equipe);
-                    }
-                    else {
-                        embed = new Discord.MessageEmbed()
-                            .setColor(15158332)
-                            .setAuthor(bot.user.username)
-                            .addFields(
-                                { name: 'Erro', value: 'O numero de jogadores não é suficiente. (Número de Jogadores atuais: ' + participantes.length + ')' }
-                            );
-                    }
-
-                    msg.channel.send(embed);
-                })
-                .catch((error) => {
-                    console.log(error)
-                    embed = new Discord.MessageEmbed()
-                        .setDescription('Ninguem vai jogar? :thinking:')
-                        .setColor(15158332)
-                        .setAuthor(bot.user.username);
-
-                    msg.channel.send(embed);
-                });
-        });
+            msg.channel.send(embed);
+        }
+        else {
+            embed = new Discord.MessageEmbed()
+                .setColor(15158332)
+                .setAuthor(bot.user.username)
+                .addFields(
+                    { name: 'Erro', value: 'Digite o nome dos jogadores. Exemplo: !nomes Teste 1, Teste 2, ...' }
+                );
+            msg.channel.send(embed);
+        }
     }
 };
 
-function numero_times(qtde) {
-    if (qtde.length > 0) {
-        return qtde[0];
+function numero_times(extra) {
+    if (extra[0] == "tam") {
+        return extra[1];
     } else {
         return 2;
+    }
+}
+
+function lista(extra) {
+    if (extra.length == 1 || extra.length > 2) {
+        if (extra[0] != "tam") {
+            return extra[0].split(",");
+        }
+        else {
+            return extra[2].split(",");
+        }
     }
 }

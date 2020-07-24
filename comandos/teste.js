@@ -5,47 +5,73 @@ const fs = require('fs');
 
 module.exports = {
     name: 'teste',
-    description: 'Sorteia os jogadores dentro do canal de voz',
-    execute(msg, qtde, bot) {
-        var idvoice = msg.member.voice.channelID; // Identifica o canal de voz em que o usuario esta
-        const voiceChannels = msg.guild.channels.cache.filter(c => c.id === idvoice && c.type === 'voice');
-        var participantes = [], nome = "";
+    description: 'Area de testes',
+    execute(msg, extra, bot) {
+        if (msg.author.id == config.mur1lol) {
+            var idvoice = msg.member.voice.channelID; // Identifica o canal de voz em que o usuario esta
+            const voiceChannels = msg.guild.channels.cache.filter(c => c.id === idvoice && c.type === 'voice');
+            var participantes = [], removidos = [];
 
-        //APENAS PARA TESTES
-        for (const [id, voiceChannel] of voiceChannels) {
-            voiceChannel.members.forEach(member => nome += (member.displayName) + "#");
-        }
-        participantes = nome.split("#").filter(empty);
+            if (remover(extra)) {
+                remover(extra).forEach(nome => {
+                    nomes = nome.replace("<@!", "").replace(">", "").replace(",", "");
+                    removidos.push(nomes)
+                })
+            }
+            removidos = removidos.filter(empty)
 
-        if (participantes.length > numero_times(qtde) && numero_times(qtde) > 1) {
-            let equipe = sorteio.equipe(participantes, numero_times(qtde));
-            embed = new Discord.MessageEmbed()
-                .setColor(2943861)
-                .setAuthor(bot.user.username)
-                .setTitle('=== Equipes Formadas ===')
-                .addFields(equipe);
-        }
-        else {
-            embed = new Discord.MessageEmbed()
-                .setColor(15158332)
-                .setAuthor(bot.user.username)
-                .addFields(
-                    { name: 'Erro', value: 'O numero de jogadores não é suficiente. (Número de Jogadores atuais: ' + participantes.length + ')' }
-                );
-        }
+            for (const [id, voiceChannel] of voiceChannels) {
+                voiceChannel.members.forEach(member => {
+                    verificador = true;
+                    for (let i = 0; i < removidos.length; i++) {
+                        if (removidos[i] == member.user.id) {
+                            verificador = false;
+                        }
+                    }
 
-        msg.channel.send(embed);
+                    if (verificador) {
+                        participantes.push(member.displayName)
+                    }
+                })
+            }
+
+            if (participantes.length >= numero_times(extra) && numero_times(extra) > 0) {
+                let equipe = sorteio.equipe(participantes, numero_times(extra));
+                embed = new Discord.MessageEmbed()
+                    .setColor(2943861)
+                    .setAuthor(bot.user.username)
+                    .setTitle('=== Equipes Formadas ===')
+                    .addFields(equipe);
+            }
+            else {
+                embed = new Discord.MessageEmbed()
+                    .setColor(15158332)
+                    .setAuthor(bot.user.username)
+                    .addFields(
+                        { name: 'Erro', value: 'O numero de jogadores não é suficiente. (Número de Jogadores atuais: ' + participantes.length + ')' }
+                    );
+            }
+
+            msg.channel.send(embed);
+        }
     }
 };
 
-function empty(value) {
-    return value != "";
-}
-
-function numero_times(qtde) {
-    if (qtde.length > 0) {
-        return qtde[0];
+function numero_times(extra) {
+    if (extra[0] == "tam") {
+        return extra[1];
     } else {
         return 2;
+    }
+}
+
+function lista(extra) {
+    if (extra.length == 1 || extra.length > 2) {
+        if (extra[0] != "tam") {
+            return extra[0].split(",");
+        }
+        else {
+            return extra[2].split(",");
+        }
     }
 }
