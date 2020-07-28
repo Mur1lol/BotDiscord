@@ -14,9 +14,9 @@ module.exports = {
             remover(extra).forEach(nome => {
                 nomes = nome.replace("<@!", "").replace(">", "").replace(",", "");
                 removidos.push(nomes)
-            })
+            });
         }
-        removidos = removidos.filter(empty)
+        removidos = removidos.filter(empty);
 
         for (const [id, voiceChannel] of voiceChannels) {
             voiceChannel.members.forEach(member => {
@@ -30,7 +30,7 @@ module.exports = {
                 if (verificador) {
                     participantes.push(member.displayName)
                 }
-            })
+            });
         }
 
         if (participantes.length >= numero_times(extra) && numero_times(extra) > 0) {
@@ -46,7 +46,7 @@ module.exports = {
                 .setColor(15158332)
                 .setAuthor(bot.user.username)
                 .addFields(
-                    { name: 'Erro', value: 'O numero de jogadores não é suficiente. (Número de Jogadores atuais: ' + participantes.length + ')' }
+                    { name: 'Erro', value: 'O número de jogadores não é suficiente para essa quantidade de equipes.' }
                 );
         }
 
@@ -68,10 +68,9 @@ function numero_times(extra) {
 
 function remover(extra) {
     tamanho = extra.length;
-    if (extra[0] == "remover") {
-        return extra.slice(1, tamanho);
-    }
-    else if (extra[2] == "remover") {
-        return extra.slice(3, tamanho);
+    for (let i =0; i<tamanho; i++) {
+        if (extra[i] == "remover") {
+            return extra.slice(i+1, tamanho)
+        }
     }
 }

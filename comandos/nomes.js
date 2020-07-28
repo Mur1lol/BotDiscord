@@ -30,7 +30,7 @@ module.exports = {
                     .setColor(15158332)
                     .setAuthor(bot.user.username)
                     .addFields(
-                        { name: 'Erro', value: 'O numero de jogadores não é suficiente. (Número de Jogadores atuais: ' + participantes.length + ')' }
+                        { name: 'Erro', value: 'O número de jogadores não é suficiente para essa quantidade de equipes.' }
                     );
             }
 
@@ -57,12 +57,10 @@ function numero_times(extra) {
 }
 
 function lista(extra) {
-    if (extra.length == 1 || extra.length > 2) {
-        if (extra[0] != "tam") {
-            return extra[0].split(",");
-        }
-        else {
-            return extra[2].split(",");
-        }
+    if (extra.length == 1 && extra[0] != "tam") {
+        return extra[0].split(",");
+    }
+    else if (extra.length == 3) {
+        return extra[2].split(",");
     }
 }
