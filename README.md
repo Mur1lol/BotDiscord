@@ -4,11 +4,11 @@
 
 ## 📚 Índice 
 
-- [Sobre](#📖-sobre)
-- [Como adicionar o Bot no seu servidor](#⌨-como-adicionar-o-bot-no-seu-servidor)
-- [Lista de Comandos](#📝-lista-de-comandos)
-- [Exemplos](#📌-exemplos)
-- [Observação](#📌-observação)
+- [Sobre](#-sobre)
+- [Como adicionar o Bot no seu servidor](#-como-adicionar-o-bot-no-seu-servidor)
+- [Lista de Comandos](#-lista-de-comandos)
+- [Exemplos](#-exemplos)
+- [Observação](#-observação)
 
 ---
 
@@ -39,7 +39,7 @@ E em seguida escolher o servidor no qual deseja adiciona-lo 😉
 > `!nomes tam <numero de equipes> <lista de nomes>`<br/>
 > `!sortear tam <numero de equipes> remover <@TeamMaker>`<br/>
 
-<img src="https://media.discordapp.net/attachments/734516091107147887/735184454221561906/bot_sortear.PNG" width="45%">
+<img src="https://media.discordapp.net/attachments/734516091107147887/735184454221561906/bot_sortear.PNG" width="50%">
 
 ---
 
