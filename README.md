@@ -35,7 +35,7 @@ E em seguida escolher o servidor no qual deseja adiciona-lo 😉
 
 ## 📌 Exemplos
 
-> `jogar tam <numero de equipes> <posição dos jogadores>! `<br/>
+> `!jogar tam <numero de equipes> <posição dos jogadores> `<br/>
 > `!nomes tam <numero de equipes> <lista de nomes>`<br/>
 > `!sortear tam <numero de equipes> remover <@TeamMaker>`<br/>
 
