@@ -5,13 +5,23 @@ const fs = require('fs');
 try {
     const comandosArq = fs.readdirSync('./comandos').filter(arq => arq.endsWith('.js'));
 
-    var lista_comandos = [], lista_exemplo = [];
+    var lista_comandos = [];
+
+    var lista_comandos_adicionais = [
+        '`tam` : Define a quantidade de equipes formadas',
+        '`remover` : Remove os jogadores da lista'
+    ];
+
+    var lista_exemplo = [
+        '!sortear tam 3',
+        '!sortear remover @TeamMaker',
+        '!sortear tam 3 remover @TeamMaker'
+    ];
 
     for (const arq of comandosArq) {
         if (arq != "help.js" && arq != "teste.js") {
             const comando = require(`./${arq}`);
-            lista_comandos.push("`" + config.prefix + comando.name + "` : " + comando.description)
-            lista_exemplo.push(comando.example)
+            lista_comandos.push("`" + config.prefix + comando.name + "` : " + comando.description);
         }
     }
 }
@@ -29,8 +39,8 @@ module.exports = {
             .setAuthor(bot.user.username, bot.user.avatarURL())
             .addFields(
                 { name: 'Lista de Comandos', value: lista_comandos },
-                { name: 'Exemplos', value: lista_exemplo},
-                { name: 'Observação', value: 'Por padrão o numero de equipes é 2. Portanto não é necessario utilizar o comando `tam`, a menos que queira formar mais de 2 equipes.\nExemplo: !sortear remover @TeamMaker' }
+                { name: 'Comandos Adicionais', value: lista_comandos_adicionais },
+                { name: 'Exemplos', value: lista_exemplo}
             );
 
         msg.channel.send(embed);
