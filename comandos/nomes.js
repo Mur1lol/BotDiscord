@@ -41,7 +41,7 @@ module.exports = {
                 .setColor(15158332)
                 .setAuthor(bot.user.username)
                 .addFields(
-                    { name: 'Erro', value: 'Digite o nome dos jogadores. Exemplo: !nomes Teste 1, Teste 2, ...' }
+                    { name: 'Erro', value: 'Digite o nome dos jogadores. Exemplo: !nomes Teste1,Teste2,...' }
                 );
             msg.channel.send(embed);
         }
@@ -57,10 +57,15 @@ function numero_times(extra) {
 }
 
 function lista(extra) {
-    if (extra.length == 1 && extra[0] != "tam") {
-        return extra[0].split(",");
+    var nomes = [];
+    if (extra[0] != "tam") {
+        return extra.slice(0).join('').split(",").filter(empty);
     }
-    else if (extra.length == 3) {
-        return extra[2].split(",");
+    else if (extra[0] == "tam") {
+        return extra.slice(2).join('').split(",").filter(empty);
     }
+}
+
+function empty(value) {
+    return value != "";
 }
