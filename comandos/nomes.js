@@ -41,7 +41,7 @@ module.exports = {
                 .setColor(15158332)
                 .setAuthor(bot.user.username)
                 .addFields(
-                    { name: 'Erro', value: 'Digite o nome dos jogadores. Exemplo: !nomes Teste1,Teste2,...' }
+                    { name: 'Erro', value: 'Digite o nome dos jogadores. Exemplo: !nomes Teste1, Teste2, ...' }
                 );
             msg.channel.send(embed);
         }
@@ -57,7 +57,6 @@ function numero_times(extra) {
 }
 
 function lista(extra) {
-    var nomes = [];
     if (extra[0] != "tam") {
         return extra.slice(0).join('').split(",").filter(empty);
     }

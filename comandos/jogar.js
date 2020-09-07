@@ -76,7 +76,6 @@ function numero_times(extra) {
 }
 
 function lista(extra) {
-    var nomes = [];
     if (extra[0] != "tam") {
         return extra.slice(0).join('').split(",").filter(empty);
     }
