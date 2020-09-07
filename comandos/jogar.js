@@ -60,7 +60,7 @@ module.exports = {
                 .setColor(15158332)
                 .setAuthor(bot.user.username)
                 .addFields(
-                    { name: 'Erro', value: 'Digite a posição em que os jogadores estão. Exemplo: !jogar 1,2,4' }
+                    { name: 'Erro', value: 'Digite a posição em que os jogadores estão. Exemplo: !jogar 1, 2, 4' }
                 );
             msg.channel.send(embed);
         }
@@ -76,7 +76,7 @@ function numero_times(extra) {
 }
 
 function lista(extra) {
-    if (extra[0] != "tam") {
+    if (extra[0] != "tam" && extra.length > 0) {
         return extra.slice(0).join('').split(",").filter(empty);
     }
     else if (extra[0] == "tam") {

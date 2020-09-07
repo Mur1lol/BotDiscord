@@ -57,7 +57,7 @@ function numero_times(extra) {
 }
 
 function lista(extra) {
-    if (extra[0] != "tam") {
+    if (extra[0] != "tam" && extra.length > 0) {
         return extra.slice(0).join('').split(",").filter(empty);
     }
     else if (extra[0] == "tam") {
