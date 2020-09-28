@@ -1,27 +1,51 @@
 module.exports = {
     equipe: function (jogadores, qtde) {
         var equipes = [];
-        var time = sorteio(jogadores, qtde)
+        var time_embaralhado = embaralhar(jogadores);
+        var time_oficial = separarTimes(time_embaralhado, qtde);
 
         for (let i = 0; i < qtde; i++) {
-            equipes.push({ "name": 'Time ' + (i + 1), "value": time[i], "inline": true });
+            equipes.push({ "name": 'Time ' + (i + 1), "value": time_oficial[i], "inline": true });
         }
 
         return equipes;
+    },
+    sorteio: function (jogadores, maxJogadores, msg) {
+        var vencedores = [];
+        var jogador_embaralhado = embaralhar(jogadores);
+        var jogador_escolhido = escolherVencedores(jogador_embaralhado, maxJogadores);
+
+        vencedores.push({ "name": 'Vencedores', "value": jogador_escolhido[0], "inline": true });
+
+        return vencedores;
     }
 }
 
-function sorteio(jogadores, qtde) {
-    var time_padrao = [], time_sorteado = [];
+function embaralhar(jogadores) {
+    var time_padrao = [];
     var num_jogadores = jogadores.length;
-    var divisao = Math.floor(jogadores.length / qtde)
-    var resto = jogadores.length % qtde;
 
     for (let i = 0; i < num_jogadores; i++) {
         let posicao = Math.floor(Math.random() * jogadores.length);
         time_padrao[i] = jogadores[posicao];
         jogadores.splice(posicao, 1);
     }
+
+    return time_padrao;
+}
+
+function escolherVencedores(time_padrao, maxJogadores) {
+    var jogadoresSorteados = [];
+
+    jogadoresSorteados.push(time_padrao.slice(0, maxJogadores));
+
+    return jogadoresSorteados;
+}
+
+function separarTimes(time_padrao, qtde) {
+    var time_sorteado = [];
+    var divisao = Math.floor(time_padrao.length / qtde)
+    var resto = time_padrao.length % qtde;
 
     for (let i = 0; i < time_padrao.length; i += divisao) {
         var inicio = i;
