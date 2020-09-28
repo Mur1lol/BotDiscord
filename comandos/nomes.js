@@ -1,12 +1,11 @@
 const Discord = require('discord.js');
-const sorteio = require('../funcoes/funSorteio.js');
+const func_sorteio = require('../funcoes/funSorteio.js'); 
+const func_regra = require('../funcoes/funRegra.js');
 
 module.exports = {
     name: 'nomes',
     description: 'Adiciona uma lista de jogadores e sorteia os times',
-    example: '!nomes tam <numero de equipes> <lista de nomes>',
     execute(msg, extra, bot) {
-        var participantes = new Array();
         var participantes = [];
         let x = 0;
 
@@ -17,12 +16,13 @@ module.exports = {
                 x++;
             }
 
-            if (participantes.length >= numero_times(extra) && numero_times(extra) > 0) {
-                let equipe = sorteio.equipe(participantes, numero_times(extra));
+            var verificador = func_regra.regra(extra, participantes.length);
+            if (verificador.status) {
+                let equipe = func_sorteio.equipe(participantes, verificador.qtde);
                 embed = new Discord.MessageEmbed()
                     .setColor(2943861)
                     .setAuthor(bot.user.username)
-                    .setTitle('=== Equipes Formadas ===')
+                    .setTitle(verificador.msg)
                     .addFields(equipe);
             }
             else {
@@ -30,7 +30,7 @@ module.exports = {
                     .setColor(15158332)
                     .setAuthor(bot.user.username)
                     .addFields(
-                        { name: 'Erro', value: 'O número de jogadores não é suficiente para essa quantidade de equipes.' }
+                        { name: 'Erro', value: verificador.msg }
                     );
             }
 
@@ -47,14 +47,6 @@ module.exports = {
         }
     }
 };
-
-function numero_times(extra) {
-    if (extra[0] == "tam") {
-        return extra[1];
-    } else {
-        return 2;
-    }
-}
 
 function lista(extra) {
     if (extra[0] != "tam" && extra.length > 0) {

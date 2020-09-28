@@ -1,10 +1,10 @@
 const Discord = require('discord.js');
-const sorteio = require('../funcoes/funSorteio.js');
+const func_sorteio = require('../funcoes/funSorteio.js');
+const func_regra = require('../funcoes/funRegra.js');
 
 module.exports = {
     name: 'sortear',
     description: 'Sorteia os jogadores dentro do canal de voz',
-    example: '!sortear tam <numero de equipes> remover <@TeamMaker @Bot ...>',
     execute(msg, extra, bot) {
         var idvoice = msg.member.voice.channelID; // Identifica o canal de voz em que o usuario esta
         const voiceChannels = msg.guild.channels.cache.filter(c => c.id === idvoice && c.type === 'voice');
@@ -33,12 +33,13 @@ module.exports = {
             });
         }
 
-        if (participantes.length >= numero_times(extra) && numero_times(extra) > 0) {
-            let equipe = sorteio.equipe(participantes, numero_times(extra));
+        var verificador = func_regra.regra(extra, participantes.length);
+        if (verificador.status) {
+            let equipe = func_sorteio.equipe(participantes, verificador.qtde);
             embed = new Discord.MessageEmbed()
                 .setColor(2943861)
                 .setAuthor(bot.user.username)
-                .setTitle('=== Equipes Formadas ===')
+                .setTitle(verificador.msg)
                 .addFields(equipe);
         }
         else {
@@ -46,25 +47,13 @@ module.exports = {
                 .setColor(15158332)
                 .setAuthor(bot.user.username)
                 .addFields(
-                    { name: 'Erro', value: 'O número de jogadores não é suficiente para essa quantidade de equipes.' }
+                    { name: 'Erro', value: verificador.msg }
                 );
         }
 
         msg.channel.send(embed);
     }
 };
-
-function empty(value) {
-    return value != "";
-}
-
-function numero_times(extra) {
-    if (extra[0] == "tam") {
-        return extra[1];
-    } else {
-        return 2;
-    }
-}
 
 function remover(extra) {
     tamanho = extra.length;
@@ -73,4 +62,8 @@ function remover(extra) {
             return extra.slice(i+1, tamanho)
         }
     }
+}
+
+function empty(value) {
+    return value != "";
 }

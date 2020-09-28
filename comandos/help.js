@@ -9,13 +9,16 @@ try {
 
     var lista_comandos_adicionais = [
         '`tam` : Define a quantidade de equipes formadas',
-        '`remover` : Remove os jogadores da lista'
+        '`remover` : Remove os jogadores da lista',
+        '`tempo` : Define o tempo para entrar em um sorteio (padrão: 1 minuto)',
+        '`max` : Define a quantidade maxima de jogadores no sorteio (padrão: 5 jogadores)'
     ];
 
     var lista_exemplo = [
         '!sortear tam 3',
         '!sortear remover @TeamMaker',
-        '!sortear tam 3 remover @TeamMaker'
+        '!sortear tam 3 remover @TeamMaker',
+        '`!sorteio tempo 0.5 max 3`'
     ];
 
     for (const arq of comandosArq) {
@@ -40,7 +43,8 @@ module.exports = {
             .addFields(
                 { name: 'Lista de Comandos', value: lista_comandos },
                 { name: 'Comandos Adicionais', value: lista_comandos_adicionais },
-                { name: 'Exemplos', value: lista_exemplo}
+                { name: 'Exemplos', value: lista_exemplo },
+                { name: 'Servidor de Suporte', value: 'Para entrar no servidor de suporte [Clique Aqui!](https://discord.gg/zm39qvQ)' }
             );
 
         msg.channel.send(embed);

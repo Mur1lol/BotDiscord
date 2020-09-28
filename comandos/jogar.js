@@ -1,19 +1,19 @@
 const Discord = require('discord.js');
-const sorteio = require('../funcoes/funSorteio.js');
+const func_sorteio = require('../funcoes/funSorteio.js');
+const func_regra = require('../funcoes/funRegra.js');
 
 module.exports = {
     name: 'jogar',
     description: 'Sorteia os jogadores pela posição dentro do canal de voz',
-    example: '!jogar tam <numero de equipes> <posição dos jogadores>',
     execute(msg, extra, bot) {
         var idvoice = msg.member.voice.channelID;
         const voiceChannels = msg.guild.channels.cache.filter(c => c.id === idvoice && c.type === 'voice');
         
-        var jogadores = new Array();
-        var participantes = [], resultado = [];
+        var participantes = new Array();
+        var jogadores = [], resultado = [];
 
         for (const [id, voiceChannel] of voiceChannels) {
-            voiceChannel.members.forEach(member => participantes.push(member.displayName));
+            voiceChannel.members.forEach(member => jogadores.push(member.displayName));
         }
 
         if (lista(extra)) {
@@ -21,8 +21,8 @@ module.exports = {
             for (let i = 0; i < resultado.length; i++) {
                 posicao = parseInt(resultado[i]) - 1;
 
-                if (posicao >= 0 && posicao < participantes.length) {
-                    jogadores[i] = participantes[posicao];
+                if (posicao >= 0 && posicao < jogadores.length) {
+                    participantes[i] = jogadores[posicao];
                 }
                 else {
                     embed = new Discord.MessageEmbed()
@@ -36,12 +36,13 @@ module.exports = {
                 }
             }
 
-            if (jogadores.length >= numero_times(extra) && numero_times(extra) > 0) {
-                let equipe = sorteio.equipe(jogadores, numero_times(extra));
+            var verificador = func_regra.regra(extra, participantes.length);
+            if (verificador.status) {
+                let equipe = func_sorteio.equipe(participantes, verificador.qtde);
                 embed = new Discord.MessageEmbed()
                     .setColor(2943861)
                     .setAuthor(bot.user.username)
-                    .setTitle('=== Equipes Formadas ===')
+                    .setTitle(verificador.msg)
                     .addFields(equipe);
             }
             else {
@@ -49,7 +50,7 @@ module.exports = {
                     .setColor(15158332)
                     .setAuthor(bot.user.username)
                     .addFields(
-                        { name: 'Erro', value: 'O número de jogadores não é suficiente para essa quantidade de equipes.' }
+                        { name: 'Erro', value: verificador.msg }
                     );
             }
 
@@ -67,14 +68,6 @@ module.exports = {
     }
 };
 
-function numero_times(extra) {
-    if (extra[0] == "tam") {
-        return extra[1];
-    } else {
-        return 2;
-    }
-}
-
 function lista(extra) {
     if (extra[0] != "tam" && extra.length > 0) {
         return extra.slice(0).join('').split(",").filter(empty);
@@ -87,3 +80,5 @@ function lista(extra) {
 function empty(value) {
     return value != "";
 }
+
+
