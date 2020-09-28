@@ -1,5 +1,3 @@
-
-
 # TeamMaker
 
 ## 📚 Índice 
@@ -46,4 +44,7 @@ E em seguida escolher o servidor no qual deseja adiciona-lo 😉
 ## 📌 Observação
 
 Por padrão o numero de equipes é 2. Portanto não é necessario utilizar o comando `tam`, a menos que queira formar mais de 2 equipes. <br/>
-Exemplo: `!sortear remover @TeamMaker`
+Exemplos: <br/>
+`!sortear tam 3` <br/>
+`!sortear remover @TeamMaker` <br/>
+`!sortear tam 3 remover @TeamMaker` <br/>
