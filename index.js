@@ -13,9 +13,8 @@ for (const arq of comandosArq) {
 }
 
 bot.on('ready', () => {
-    console.log('Estou online :D');
     console.log(`Logged in as ${bot.user.tag}!`);
-    bot.user.setActivity('!help', {type: 'LISTENING' });
+    bot.user.setActivity('!help', { type: 'LISTENING' });
 });
 
 bot.on('message', msg => {
@@ -27,7 +26,7 @@ bot.on('message', msg => {
     if (!bot.comandos.has(nome_comando)) return;
 
     const comando = bot.comandos.get(nome_comando);
-    
+
     try {
         comando.execute(msg, extra, bot);
     } catch (error) {

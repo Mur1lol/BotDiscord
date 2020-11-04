@@ -6,19 +6,12 @@ module.exports = {
     name: 'nomes',
     description: 'Adiciona uma lista de jogadores e sorteia os times',
     execute(msg, extra, bot) {
-        var participantes = [];
-        let x = 0;
+        try {
+            var players = getPlayers(extra);
+            var verificador = func_regra.regra(extra, players.length);
 
-        if (lista(extra)) {
-            resultado = lista(extra);
-            for (let j = 0; j < resultado.length; j++) {
-                participantes[x] = resultado[j].trim(); //Colocando os nomes dentro do Array e removendo os espaços
-                x++;
-            }
-
-            var verificador = func_regra.regra(extra, participantes.length);
             if (verificador.status) {
-                let equipe = func_sorteio.equipe(participantes, verificador.qtde);
+                let equipe = func_sorteio.equipe(players, verificador.qtde);
                 embed = new Discord.MessageEmbed()
                     .setColor(2943861)
                     .setAuthor(bot.user.username)
@@ -26,27 +19,26 @@ module.exports = {
                     .addFields(equipe);
             }
             else {
-                embed = new Discord.MessageEmbed()
-                    .setColor(15158332)
-                    .setAuthor(bot.user.username)
-                    .addFields(
-                        { name: 'Erro', value: verificador.msg }
-                    );
+                embed = msgError(bot, verificador.msg);
             }
+        } catch (error) {
+            embed = msgError(bot, "Digite o nome dos jogadores. Exemplo: !nomes Teste1, Teste2, ...");
+        }
 
-            msg.channel.send(embed);
-        }
-        else {
-            embed = new Discord.MessageEmbed()
-                .setColor(15158332)
-                .setAuthor(bot.user.username)
-                .addFields(
-                    { name: 'Erro', value: 'Digite o nome dos jogadores. Exemplo: !nomes Teste1, Teste2, ...' }
-                );
-            msg.channel.send(embed);
-        }
+        msg.channel.send(embed);  
     }
 };
+
+function msgError(bot, value) {
+    embed = new Discord.MessageEmbed()
+        .setColor(15158332)
+        .setAuthor(bot.user.username)
+        .addFields(
+            { name: 'Erro', value: value }
+        );
+
+    return embed;
+}
 
 function lista(extra) {
     if (extra[0] != "tam" && extra.length > 0) {
@@ -59,4 +51,17 @@ function lista(extra) {
 
 function empty(value) {
     return value != "";
+}
+
+function getPlayers(extra) {
+    var participantes = [];
+    let x = 0;
+
+    resultado = lista(extra);
+    for (let j = 0; j < resultado.length; j++) {
+        participantes[x] = resultado[j].trim(); //Colocando os nomes dentro do Array e removendo os espaços
+        x++;
+    }
+
+    return participantes;
 }
