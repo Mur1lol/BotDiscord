@@ -10,7 +10,7 @@ module.exports = {
 
         var lista_comandos = [];
         for (const arq of comandosArq) {
-            if (arq != "help.js" && arq != "teste.js" && arq != "jogar.js") {
+            if (arq != "help.js") {
                 const comando = require(`./${arq}`);
                 lista_comandos.push("`" + config.prefix + comando.name + "` : " + comando.description);
             }
@@ -23,8 +23,8 @@ module.exports = {
 
         var lista_exemplo = [
             '!sortear tam 3',
-            '!sortear remover @'+ bot.user.username,
-            '!sortear tam 3 remover @'+ bot.user.username
+            '!sortear remover @' + bot.user.username,
+            '!sortear tam 3 remover @' + bot.user.username
         ];
 
         const embed = new Discord.MessageEmbed()
